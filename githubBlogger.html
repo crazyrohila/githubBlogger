@@ -8,43 +8,10 @@
       <div class="sm-col sm-col-12">
         <h1>Collaborative blogging! </h1>
       </div>
-    </div>
-    <form class="add-article">
-      <div class="form-item">
-        <input type="text" name="title" placeholder="Title" />
-      </div>
-      <div class="form-item">
-        <textarea type="textarea" name="body" placeholder="Description"></textarea>
-      </div>
-      <div class="form-item">
-        {{> select}}
-      </div>
-      <div class="form-item">
-        <input type="text" name="author" placeholder="author" />
-      </div>
-      <input type="submit" name="submit" />
-    </form>
 
-    <div class="articles">
-      {{#each articles}}
-        {{> article}}
-      {{/each}}
+      <div class="sm-col sm-col4">
+        {{> loginButtons}}
+      </div>
     </div>
   </section>
 </body>
-
-<template name="article">
-  <article>
-    <a href="{{title}}"><h3>{{title}}</h3></a> | <button class="remove">X</button>
-    <p><span>by {{author}}</span> | <span>{{date}}</span> | <span>in {{category}}</span></p>
-    <p>{{body}}</p>
-  </article>
-</template>
-
-<template name="select">
-  <select name="category" placeholder="Select Category">
-    {{#each tags}}
-      <option>{{option}}</option>
-    {{/each}}
-  </select>
-</template>
