@@ -1,9 +1,18 @@
-Tasks = new Mongo.Collection("articles");
+Posts = new Mongo.Collection("articles");
 
 if (Meteor.isClient) {
   Template.body.helpers({
     articles: function () {
-      return Tasks.find({});
+      return Posts.find({});
+    }
+  });
+
+  Template.article.helpers({
+    userIsAuthor: function () {
+      if(this.author_id == Meteor.userId()) {
+        return true;
+      }
+      return false;
     }
   });
 
@@ -14,41 +23,45 @@ if (Meteor.isClient) {
       { option: "Angular" }
     ]
   });
-
+console.log(Meteor);
   Template.body.events({
     "submit .add-article": function (event) {
-      // This function is called when the new task form is submitted
+      if (!Meteor.userId()) {
+        throw new Meteor.Error("Please login first.");
+      }
+      else {
+        var title = event.target.title.value;
+        var body = event.target.body.value;
+        var tag = event.target.category.value;
+        var author = Meteor.user().username;
 
-      var title = event.target.title.value;
-      var body = event.target.body.value;
-      var tag = event.target.category.value;
-      var author = event.target.author.value;
+        Posts.insert({
+          title: title,
+          body: body,
+          author: author,
+          categary: tag,
+          date: new Date(),
+          author_id: Meteor.userId()
+        });
 
-      Tasks.insert({
-        title: title,
-        body: body,
-        author: author,
-        categary: tag,
-        date: new Date()
-      });
+        // Reload the page
+        window.location.reload();
+      }
 
-      // Reload the page
-      window.location.reload();
-      // Clear form
-      // for (var i = event.target.elements.length - 1; i >= 0; i--) {
-      //   if (event.target.elements[i].name = "submit") {
-      //     return;
-      //   }
-      //   event.target.elements[i].value = "";
-      // };
-      // event.target.text.value = "";
-
-      // Prevent default form submit
       return false;
     },
     "click .remove": function(event) {
-      Tasks.remove(this._id);
+      if (!Meteor.userId()) {
+        throw new Meteor.Error("Don't be a jerk.");
+      }
+      else {
+        Posts.remove(this._id);
+      }
     }
+  });
+
+  Accounts.ui.config({
+    passwordSignupFields: "USERNAME_ONLY"
   });
 
   // Template.article.events({
@@ -61,6 +74,13 @@ if (Meteor.isClient) {
 
 if (Meteor.isServer) {
   Meteor.startup(function () {
-    // code to run on server at startup
+    Posts._ensureIndex({
+        title: 'text',
+        body: 'text',
+        category: 'text',
+        author: 'text'
+    }, {
+        name: 'article_search'
+    });
   });
 }

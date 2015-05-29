@@ -10,22 +10,27 @@
         <h1>Collaborative blogging! </h1>
       </div>
     </div>
-    <form class="add-article">
-      <div class="form-item">
-        <input type="text" name="title" placeholder="Title" />
-      </div>
-      <div class="form-item">
-        <textarea type="textarea" name="body" placeholder="Description"></textarea>
-      </div>
-      <div class="form-item">
-        {{> select}}
-      </div>
-      <div class="form-item">
-        <input type="text" name="author" placeholder="author" />
-      </div>
-      <input type="submit" name="submit" />
-    </form>
-
+    <div class="hero-unit">
+      {{> loginButtons}}
+      <span>{{currentUser.username}}</span>
+    </div>
+    {{#if currentUser}}
+      <form class="add-article">
+        <div class="form-item">
+          <input type="text" name="title" placeholder="Title" required="true" />
+        </div>
+        <div class="form-item">
+          <textarea type="textarea" name="body" placeholder="Description"></textarea>
+        </div>
+        <div class="form-item">
+          {{> select}}
+        </div>
+        <!-- <div class="form-item">
+          <input type="text" name="author" placeholder="author" />
+        </div> -->
+        <input type="submit" name="submit" />
+      </form>
+    {{/if}}
     <div class="articles">
       {{#each articles}}
         {{> article}}
@@ -36,7 +41,7 @@
 
 <template name="article">
   <article>
-    <a href="{{title}}"><h3>{{title}}</h3></a> | <button class="remove">X</button>
+    <a href="{{title}}"><h3>{{title}}</h3></a> | {{#if userIsAuthor}}<button class="remove">X</button>{{/if}}
     <p><span>by {{author}}</span> | <span>{{date}}</span> | <span>in {{category}}</span></p>
     <p>{{body}}</p>
   </article>
