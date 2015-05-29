@@ -7,6 +7,8 @@
 meteor-platform
 autopublish
 insecure
+zhenya:forkme
+kit:basscss
+accounts-github
 accounts-ui
 accounts-password
-accounts-github
